@@ -1,0 +1,70 @@
+<html>
+<head>
+	<title> PHARMACY INVENTORY </title>
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
+
+</head>
+<body>
+<h1 style="text-align:center;"> LIST OF MEDICINES </h1> 
+<?php
+
+require("connect.php");
+
+$sql = "SELECT * FROM tblmedicine";
+
+    try{
+        $result = $conn->prepare($sql);
+
+        $result->execute();
+
+?>
+<div class = "container">
+	
+	<a class = "btn btn-outline-primary" href=" add_record.php" role="button"> Add Record</a>
+		<table border ="1" class = "table table-hover table-striped">
+			<tr>
+				<th> ID </th>
+				<th>Name</th>
+				<th>Quantity</th>
+				<th>Date of Expiration</th>
+				<th>Amount</th>
+				<th> Action </th>
+				<th> </th>
+			</tr>
+    
+<?php
+
+        if($result->rowCount()>0){
+            $i=1;
+            while($row=$result->fetch (PDO::FETCH_ASSOC)){
+
+?>                <tr>
+                    <td> <?php echo $row["id"] ?> </td>
+					<td> <?php echo $row["name"]; ?> </td>
+					<td> <?php echo $row["qty"]; ?> </td>
+					<td> <?php echo $row["date_expiration"]; ?> </td>
+					<td> <?php echo $row["amount"]; ?> </td>
+				
+					<td>
+						<a href = "edit_record.php?id=<?php echo $row["id"]?>" class = "btn btn-warning"> Edit Record</a>
+					</td>
+					<td>
+						<a href = "delete.php" class = "btn btn-danger"> Delete Record</a>
+					</td>
+                </tr>
+<?php
+            }
+			$i++;
+        } else{
+			echo "No records found!"; 
+		}
+    }
+	catch(PDOexception $e){
+		
+		die("An error has been occured".$e);
+	}
+
+?>
+</div>
+</body>
+</html>
